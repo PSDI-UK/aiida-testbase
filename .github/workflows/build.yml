@@ -14,10 +14,10 @@ jobs:
       matrix:
         os: ["ubuntu:22.04"]
         python: [3.10.13, 3.11.7, 3.12.1]
+    name: ${{ matrix.os }}, python-${{ matrix.python }}
     steps:
-
       - name: Authenticate with harbor
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: harbor.stfc.ac.uk
           username: ${{ secrets.HARBOR_USERNAME }}
