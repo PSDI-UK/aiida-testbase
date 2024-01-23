@@ -2,8 +2,7 @@ name: Build and Push container
 
 on:
   push:
-    branches: [master]
-    tags:
+    branches: [main]
       # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
       - v[0-9]+.[0-9]+.[0-9]+*
 
