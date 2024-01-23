@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: ["ubuntu:22.04"]
+        os: [22.04]
         python: [3.10.13, 3.11.7, 3.12.1]
     name: ${{ matrix.os }}, python-${{ matrix.python }}
     steps:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and Push image to Harbor
         run: |
-          docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }}  -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.os }}-py${{ matrix.python }}
-          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.os }}-py${{ matrix.python }}
+          docker build ./docker --build-arg BASE_IMAGE=ubuntu:${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }}  -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
+          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
 
 
