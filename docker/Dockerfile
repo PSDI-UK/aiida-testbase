@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:22.04
+ARG BASE_IMAGE=ubuntu:latest
+FROM $BASE_IMAGE
 
 LABEL maintainer="James Gebbie-Rayet <james.gebbie@stfc.ac.uk>"
 

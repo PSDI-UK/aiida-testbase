@@ -1,0 +1,32 @@
+name: Build and Push container
+
+on:
+  push:
+    branches: [master]
+    tags:
+      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu:22.04]
+        python: [3.10.13, 3.11.7, 3.12.1]
+    steps:
+
+      - name: Authenticate with harbor
+        uses: docker/login-action@v1
+        with:
+          registry: harbor.stfc.ac.uk
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Build and Push image to Harbor
+        uses: actions/checkout@v3
+        run: |
+          docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }}  -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.os }}-py${{ matrix.python }}
+          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.os }}-py${{ matrix.python }}
+
+
