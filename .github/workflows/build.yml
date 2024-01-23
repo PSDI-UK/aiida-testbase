@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [22.04]
         python: [3.10.13, 3.11.7, 3.12.1]
-    name: ${{ matrix.os }}, python-${{ matrix.python }}
+    name: ubuntu:${{ matrix.os }}, python-${{ matrix.python }}
     steps:
       - name: Authenticate with harbor
         uses: docker/login-action@v3
