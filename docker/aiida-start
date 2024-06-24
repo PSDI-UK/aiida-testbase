@@ -1,4 +1,4 @@
-pg_ctl -D /home/jovyan/.aiida/aiida_db -l /home/jovyan/.aiida/logfile start
+pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
 sleep 2
 rabbitmq-server -detached
 sleep 2
