@@ -12,9 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [22.04]
+        os: ["ubuntu:22.04"]
         python: [3.10.13, 3.11.0, 3.11.7, 3.12.1]
-    name: ubuntu:${{ matrix.os }}, python-${{ matrix.python }}
+        aiida-core: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
+        postgres: [15.1]
+        rabbitmq: [3.10.14]
+    name: aiida-${{ matrix.aiida-core }}, python-${{ matrix.python }}
     steps:
       - name: Authenticate with harbor
         uses: docker/login-action@v3
@@ -27,7 +30,5 @@ jobs:
 
       - name: Build and Push image to Harbor
         run: |
-          docker build ./docker --build-arg BASE_IMAGE=ubuntu:${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }}  -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
-          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
-
-
+          docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }} --build-arg AIIDA_VERSION=${{ matrix.aiida-core }} --build-arg PGSQL_VERSION=${{ matrix.postgres }} --build-arg RMQ_VERSION=${{ matrix.rabbitmq }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
+          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-aiida${{ matrix.aiida-core }}-py${{ matrix.python }}
