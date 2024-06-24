@@ -30,5 +30,5 @@ jobs:
 
       - name: Build and Push image to Harbor
         run: |
-          docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }} --build-arg AIIDA_VERSION=${{ matrix.aiida-core }} --build-arg PGSQL_VERSION=${{ matrix.postgres }} --build-arg RMQ_VERSION=${{ matrix.rabbitmq }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:ubuntu${{ matrix.os }}-py${{ matrix.python }}
+          docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }} --build-arg AIIDA_VERSION=${{ matrix.aiida-core }} --build-arg PGSQL_VERSION=${{ matrix.postgres }} --build-arg RMQ_VERSION=${{ matrix.rabbitmq }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-aiida${{ matrix.aiida-core }}-py${{ matrix.python }}
           docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-aiida${{ matrix.aiida-core }}-py${{ matrix.python }}
