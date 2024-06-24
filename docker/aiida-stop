@@ -1,0 +1,7 @@
+verdi daemon stop
+wait
+pg_ctl -D /home/jovyan/.aiida/aiida_db stop
+wait
+rabbitmqctl stop
+wait
+
