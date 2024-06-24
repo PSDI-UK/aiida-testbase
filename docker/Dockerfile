@@ -21,7 +21,7 @@ USER root
 ENV SYSTEM_USER="${SYSTEM_USER}"
 
 # Install all OS dependencies
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
@@ -76,13 +76,6 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     fix-permissions "${HOME}" && \
     fix-permissions "${CONDA_DIR}"
 
-# Install RabbitMQ
-RUN wget -c --no-check-certificate https://github.com/rabbitmq/rabbitmq-server/releases/download/v${RMQ_VERSION}/rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
-     tar -xf rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
-     rm rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
-     ln -sf /opt/rabbitmq_server-${RMQ_VERSION}/sbin/* /usr/local/bin/ && \
-     fix-permissions /opt/rabbitmq_server-${RMQ_VERSION}
-
 # make a github actions mount point.
 RUN mkdir /github && \
     chown "${SYSTEM_USER}:${SYSTEM_GID}" /github
@@ -120,7 +113,7 @@ RUN set -x && \
 
 # Add ~/.local/bin to PATH where the dependencies get installed via pip
 # This require the package installed with `--user` flag in pip
-ENV PATH=${PATH}:/home/${NB_USER}/.local/bin
+ENV PATH=${PATH}:/home/${SYSTEM_USER}/.local/bin
 
 # Install and pin aiida-core and postgresql.
 RUN mamba install -c conda-forge -y aiida-core=${AIIDA_VERSION} postgresql=${PGSQL_VERSION}
@@ -131,7 +124,15 @@ RUN conda config --env --add pinned_packages postgresql=${PGSQL_VERSION}
 COPY --chown=${SYSTEM_USER}:${SYSTEM_GID} aiida-start /home/${SYSTEM_USER}
 COPY --chown=${SYSTEM_USER}:${SYSTEM_GID} aiida-stop /home/${SYSTEM_USER}
 
+# Install RabbitMQ
+USER root
+WORKDIR /opt
+RUN wget -c --no-check-certificate https://github.com/rabbitmq/rabbitmq-server/releases/download/v${RMQ_VERSION}/rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
+    tar -xf rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
+    rm rabbitmq-server-generic-unix-${RMQ_VERSION}.tar.xz && \
+    ln -sf /opt/rabbitmq_server-${RMQ_VERSION}/sbin/* /usr/local/bin/ && \
+    fix-permissions /opt/rabbitmq_server-${RMQ_VERSION}
+
 # Switch back to USER aiida to avoid accidental container runs as root
 USER ${SYSTEM_UID}
-
 WORKDIR "${HOME}"
