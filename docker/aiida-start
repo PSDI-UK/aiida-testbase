@@ -1,6 +1,10 @@
+initdb -D /home/aiida/.aiida/aiida_db
+sleep 2
 pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
 sleep 2
 rabbitmq-server -detached
+sleep 2
+printf '%s\n' testing test@test.com testy tester testorg | verdi quicksetup
 sleep 2
 verdi config set warnings.rabbitmq_version False
 verdi config set warnings.showdeprecations false
