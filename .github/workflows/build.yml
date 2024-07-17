@@ -2,19 +2,18 @@ name: Build and Push container
 
 on:
   push:
-    branches: [main]
     tags:
-      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
-      - v[0-9]+.[0-9]+.[0-9]+*
+      # Match tags starting with date followed by anything.
+      - [0-9]{1,4}+(\-[0-9]{1,2})+(\-[0-9]{1,2})+*
 
 jobs:
-  build:
+  base-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         os: ["ubuntu:22.04"]
         python: [3.11.0]
-        aiida-core: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
+        aiida-core: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2, 2.6.1]
         postgres: [15.1]
         rabbitmq: [3.10.14]
     name: aiida-${{ matrix.aiida-core }}, python-${{ matrix.python }}
@@ -32,3 +31,61 @@ jobs:
         run: |
           docker build ./docker --build-arg BASE_IMAGE=${{ matrix.os }} --build-arg PYTHON_VERSION=${{ matrix.python }} --build-arg AIIDA_VERSION=${{ matrix.aiida-core }} --build-arg PGSQL_VERSION=${{ matrix.postgres }} --build-arg RMQ_VERSION=${{ matrix.rabbitmq }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-aiida${{ matrix.aiida-core }}-py${{ matrix.python }}
           docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-aiida${{ matrix.aiida-core }}-py${{ matrix.python }}
+
+  amber-build:
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base: [aiida2.4.0-py3.11.0,
+               aiida2.4.1-py3.11.0,
+               aiida2.4.2-py3.11.0,
+               aiida2.5.0-py3.11.0,
+               aiida2.5.1-py3.11.0,
+               aiida2.5.2-py3.11.0,
+               aiida2.6.1-py3.11.0]
+        amber: [22, 23, 24]
+    name: base-${{ matrix.base }}, amber-${{ matrix.amber }}
+    steps:
+      - name: Authenticate with harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.stfc.ac.uk
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - uses: actions/checkout@v4
+
+      - name: Build and Push image to Harbor
+        run: |
+          docker build ./docker --build-arg BASE_IMAGE=$(date +'%Y-%m-%d')-${{ matrix.base }} --build-arg AMBER_VERSION=${{ matrix.amber }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-amber${{ matrix.amber }}
+          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-amber${{ matrix.amber }}
+
+  gromacs-build:
+    needs: base-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base: [aiida2.4.0-py3.11.0,
+               aiida2.4.1-py3.11.0,
+               aiida2.4.2-py3.11.0,
+               aiida2.5.0-py3.11.0,
+               aiida2.5.1-py3.11.0,
+               aiida2.5.2-py3.11.0,
+               aiida2.6.1-py3.11.0]
+        gromacs: [2022.4, 2023.4, 2024.2]
+    name: aiida-${{ matrix.base }}, python-${{ matrix.gromacs }}
+    steps:
+      - name: Authenticate with harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.stfc.ac.uk
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - uses: actions/checkout@v4
+
+      - name: Build and Push image to Harbor
+        run: |
+          docker build ./docker --build-arg BASE_IMAGE=$(date +'%Y-%m-%d')-${{ matrix.base }} --build-arg GMX_VERSION=${{ matrix.gromacs }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-gromacs${{ matrix.gromacs }}
+          docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-gromacs${{ matrix.gromacs }}
