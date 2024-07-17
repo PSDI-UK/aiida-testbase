@@ -3,8 +3,7 @@ name: Build and Push container
 on:
   push:
     tags:
-      # Match tags starting with date followed by anything.
-      - '[0-9]{1,4}+-[0-9]{1,2}+-[0-9]{1,2}+*'
+      - '[0-9]{1,4}+-[0-9]{1,2}+-[0-9]{1,2}'
 
 jobs:
   base-build:
