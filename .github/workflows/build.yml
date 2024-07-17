@@ -1,9 +1,9 @@
-name: Build and Push container
+name: Build and Push containers
 
 on:
   push:
     tags:
-      - '[0-9]{1,4}+-[0-9]{1,2}+-[0-9]{1,2}'
+      - '[0-9]{1,4}+-[0-9]{1,2}+-[0-9]{1,2}+'
 
 jobs:
   base-build:
