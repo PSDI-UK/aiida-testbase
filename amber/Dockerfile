@@ -26,8 +26,9 @@ USER ${SYSTEM_UID}
 WORKDIR /tmp
 
 # Download, unzip and cd into the specified AMBER source.
-RUN curl -C - -d "Name=test&Institution=test" -X POST https://ambermd.org/cgi-bin/AmberTools${AMBER_VERSION}-get.pl --output AmberTools${AMBER_VERSION}.tar.bz2
-RUN chown ${SYSTEM_UID}:${SYSTEM_GID} AmberTools${AMBER_VERSION}.tar.bz2 && \
+
+RUN wget https://www.hecbiosim.ac.uk/ambertools/AmberTools${AMBER_VERSION}.tar.bz2 && \
+    chown ${SYSTEM_UID}:${SYSTEM_GID} AmberTools${AMBER_VERSION}.tar.bz2 && \
     tar xvjf AmberTools${AMBER_VERSION}.tar.bz2 && \
     rm AmberTools${AMBER_VERSION}.tar.bz2
 WORKDIR /tmp/amber${AMBER_HOME}_src
