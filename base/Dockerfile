@@ -25,19 +25,24 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
+    bison \
     build-essential \
     bzip2 \
     ca-certificates \
     cmake \
     curl \
+    flex \
     erlang \
+    gfortran \
     git \
+    libbz2-dev \
     locales \
     openssh-client \
     sudo \
     vim \
     wget \
-    xz-utils && \
+    xz-utils \
+    zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
