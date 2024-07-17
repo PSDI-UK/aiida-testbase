@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG BASE_IMAGE=2024-06-24-aiida2.4.0-py3.11.0
+ARG BASE_IMAGE=2024-07-17-aiida2.4.0-py3.11.0
 FROM harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$BASE_IMAGE
 
 LABEL maintainer="James Gebbie-Rayet <james.gebbie@stfc.ac.uk>"
@@ -18,9 +18,6 @@ RUN if [ $(($AMBER_VERSION%2)) -ne 0 ]; then \
 # Change to root and build in /tmp.
 USER root
 
-RUN apt-get update
-RUN apt-get install gfortran flex bison zlib1g-dev libbz2-dev --yes --no-install-recommends
-
 RUN mkdir /opt/amber${AMBER_HOME} && \
     chown ${SYSTEM_UID}:${SYSTEM_GID} -R /opt/amber${AMBER_HOME} && \
     fix-permissions "/opt/amber${AMBER_HOME}" 
@@ -29,7 +26,7 @@ USER ${SYSTEM_UID}
 WORKDIR /tmp
 
 # Download, unzip and cd into the specified AMBER source.
-RUN curl -d "Name=test&Institution=test" -X POST https://ambermd.org/cgi-bin/AmberTools${AMBER_VERSION}-get.pl --output AmberTools${AMBER_VERSION}.tar.bz2
+RUN curl -C - -d "Name=test&Institution=test" -X POST https://ambermd.org/cgi-bin/AmberTools${AMBER_VERSION}-get.pl --output AmberTools${AMBER_VERSION}.tar.bz2
 RUN chown ${SYSTEM_UID}:${SYSTEM_GID} AmberTools${AMBER_VERSION}.tar.bz2 && \
     tar xvjf AmberTools${AMBER_VERSION}.tar.bz2 && \
     rm AmberTools${AMBER_VERSION}.tar.bz2
