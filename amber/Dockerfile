@@ -5,6 +5,7 @@ FROM harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$BASE_IMAGE
 LABEL maintainer="James Gebbie-Rayet <james.gebbie@stfc.ac.uk>"
 
 # Specify some default version, but really we want to override it in GHA.
+ARG AMBER_DL_PATH=null
 ARG AMBER_VERSION=24
 ENV AMBER_VERSION=${AMBER_VERSION}
 
@@ -19,7 +20,7 @@ USER ${SYSTEM_UID}
 WORKDIR /tmp
 
 # Download, unzip and cd into the specified AMBER source.
-RUN wget https://www.hecbiosim.ac.uk/ambertools/AmberTools${AMBER_VERSION}.tar.bz2 && \
+RUN wget $AMBER_DL_PATH/AmberTools${AMBER_VERSION}.tar.bz2 && \
     chown ${SYSTEM_UID}:${SYSTEM_GID} AmberTools${AMBER_VERSION}.tar.bz2 && \
     mkdir /tmp/amber${AMBER_VERSION}_src && \
     tar xvjf AmberTools${AMBER_VERSION}.tar.bz2 -C /tmp/amber${AMBER_VERSION}_src --strip-components 1 && \

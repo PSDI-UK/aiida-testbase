@@ -56,8 +56,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build and Push image to Harbor
+        with:
+          AMBERPATH: ${{ secrets.AMBER_DL_PATH }}
         run: |
-          docker build ./amber --build-arg BASE_IMAGE=$(date +'%Y-%m-%d')-${{ matrix.base }} --build-arg AMBER_VERSION=${{ matrix.amber }} -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-amber${{ matrix.amber }}
+          docker build ./amber --build-arg BASE_IMAGE=$(date +'%Y-%m-%d')-${{ matrix.base }} --build-arg AMBER_VERSION=${{ matrix.amber }} --build-arg AMBER_DL_PATH="$AMBERPATH" -t harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-amber${{ matrix.amber }}
           docker push harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$(date +'%Y-%m-%d')-${{ matrix.base }}-amber${{ matrix.amber }}
 
   gromacs-build:
