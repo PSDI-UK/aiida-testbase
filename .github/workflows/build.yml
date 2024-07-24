@@ -43,7 +43,7 @@ jobs:
                aiida2.5.1-py3.11.0,
                aiida2.5.2-py3.11.0,
                aiida2.6.1-py3.11.0]
-        amber: [22, 23, 24]
+        amber: [23, 24]
     name: base-${{ matrix.base }}-amber-${{ matrix.amber }}
     steps:
       - name: Authenticate with harbor
