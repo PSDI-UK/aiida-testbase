@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG BASE_IMAGE=2024-06-24-aiida2.4.0-py3.11.0
-FROM harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:$BASE_IMAGE
+FROM harbor.stfc.ac.uk/psdi-pathfinder4/aiida-testbase:$BASE_IMAGE
 
 LABEL maintainer="James Gebbie-Rayet <james.gebbie@stfc.ac.uk>"
 
