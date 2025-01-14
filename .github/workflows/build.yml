@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: ["ubuntu:22.04"]
         python: [3.11.0]
-        aiida-core: [2.5.0, 2.5.1, 2.5.2, 2.6.0, 2.6.1, 2.6.2, 2.6.3]
+        aiida-core: [2.5.0, 2.5.1, 2.5.2, 2.6.1, 2.6.2, 2.6.3]
         postgres: [15.1]
         rabbitmq: [3.10.14]
     name: aiida-${{ matrix.aiida-core }}-python-${{ matrix.python }}
