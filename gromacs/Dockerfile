@@ -33,27 +33,17 @@ RUN wget ftp://ftp.gromacs.org/gromacs/gromacs-${GMX_VERSION}.tar.gz && \
     tar xvf gromacs-${GMX_VERSION}.tar.gz && \
     rm gromacs-${GMX_VERSION}.tar.gz
 
-# Make a build dir in source dir.
+# Patch gmx with plumed and make build dir
 WORKDIR /tmp/gromacs-${GMX_VERSION}
+RUN plumed patch -p -e gromacs-2024.3
 RUN mkdir build
 
 # Build gromacs without mpi and without cuda.
 WORKDIR /tmp/gromacs-${GMX_VERSION}/build
-RUN cmake .. -DCMAKE_INSTALL_PREFIX=/opt/gromacs-${GMX_VERSION} \
-    -DGMX_THREAD_MPI=OFF -DGMX_BUILD_OWN_FFTW=ON -DGMX_OPENMP=ON \
-    -DGMXAPI=OFF -DCMAKE_BUILD_TYPE=Release
-RUN make -j8
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/opt/gromacs-${GMX_VERSION} -DGMX_BUILD_OWN_FFTW=ON -DGMX_OPENMP=ON -DGMXAPI=OFF -DCMAKE_BUILD_TYPE=Release
 
-# Patch gmx with plumed.
-WORKDIR /tmp/gromacs-${GMX_VERSION}
-RUN plumed patch -p -e gromacs-2024.3
-
-# Recompile and install gromacs
-WORKDIR /tmp/gromacs-${GMX_VERSION}/build
 RUN make -j8
 RUN make install
-RUN rm -r /tmp/gromacs-${GMX_VERSION} && \
-    fix-permissions "/opt/gromacs-${GMX_VERSION}" 
 
 # Cleanup and fix permissions.
 RUN rm -r /tmp/gromacs-${GMX_VERSION}
