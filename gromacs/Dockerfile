@@ -26,7 +26,14 @@ WORKDIR /tmp/plumed2-${PLUMED_VERSION}
 RUN ./configure --prefix=/opt/plumed2-${PLUMED_VERSION}
 RUN make -j8
 RUN make install
-RUN source sourceme.sh
+
+# Add plumed to the various paths.
+ENV PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib:$PATH
+ENV LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib:$LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib/:$LD_LIBRARY_PATH
+ENV PLUMED_KERNEL=/opt/plumed2-${PLUMED_VERSION}/src/lib/libplumedKernel.so
+ENV PLUMED_VIMPATH=/opt/plumed2-${PLUMED_VERSION}/vim
+ENV PYTHONPATH=/opt/plumed2-${PLUMED_VERSION}/python:$PYTHONPATH
 
 # Grab the specified version of gromacs and untar the source.
 RUN wget ftp://ftp.gromacs.org/gromacs/gromacs-${GMX_VERSION}.tar.gz && \
