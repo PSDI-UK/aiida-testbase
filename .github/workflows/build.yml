@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: ["ubuntu:22.04"]
         python: [3.11.0]
-        aiida-core: [2.5.0, 2.5.1, 2.5.2, 2.6.1, 2.6.2, 2.6.3]
+        aiida-core: [2.6.1, 2.6.2, 2.6.3]
         postgres: [15.1]
         rabbitmq: [3.10.14]
     name: aiida-${{ matrix.aiida-core }}-python-${{ matrix.python }}
@@ -36,13 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: [aiida2.5.0-py3.11.0,
-               aiida2.5.1-py3.11.0,
-               aiida2.5.2-py3.11.0,
-               aiida2.6.1-py3.11.0,
+        base: [aiida2.6.1-py3.11.0,
                aiida2.6.2-py3.11.0,
                aiida2.6.3-py3.11.0]
-        amber: [23, 24]
+        amber: [24]
     name: base-${{ matrix.base }}-amber-${{ matrix.amber }}
     steps:
       - name: Authenticate with harbor
@@ -66,10 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: [aiida2.5.0-py3.11.0,
-               aiida2.5.1-py3.11.0,
-               aiida2.5.2-py3.11.0,
-               aiida2.6.1-py3.11.0,
+        base: [aiida2.6.1-py3.11.0,
                aiida2.6.2-py3.11.0,
                aiida2.6.3-py3.11.0]
         gromacs: [2024.2]
