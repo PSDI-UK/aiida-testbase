@@ -64,7 +64,7 @@ jobs:
         base: [aiida2.6.1-py3.11.0,
                aiida2.6.2-py3.11.0,
                aiida2.6.3-py3.11.0]
-        gromacs: [2024.2]
+        gromacs: [2024.3]
     name: base-${{ matrix.base }}-gromacs-${{ matrix.gromacs }}
     steps:
       - name: Authenticate with harbor
