@@ -65,7 +65,7 @@ jobs:
                aiida2.6.2-py3.11.0,
                aiida2.6.3-py3.11.0]
         gromacs: [2024.2]
-    name: aiida-${{ matrix.base }}-gromacs-${{ matrix.gromacs }}
+    name: base-${{ matrix.base }}-gromacs-${{ matrix.gromacs }}
     steps:
       - name: Authenticate with harbor
         uses: docker/login-action@v3
