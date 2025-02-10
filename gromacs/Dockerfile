@@ -28,10 +28,10 @@ RUN make -j8
 RUN make install
 
 # Add plumed to the various paths.
-ENV PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib:$PATH
-ENV LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib:$LIBRARY_PATH
-ENV LD_LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/src/lib/:$LD_LIBRARY_PATH
-ENV PLUMED_KERNEL=/opt/plumed2-${PLUMED_VERSION}/src/lib/libplumedKernel.so
+ENV PATH=/opt/plumed2-${PLUMED_VERSION}/bin:$PATH
+ENV LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/lib:$LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/opt/plumed2-${PLUMED_VERSION}/lib:$LD_LIBRARY_PATH
+ENV PLUMED_KERNEL=/opt/plumed2-${PLUMED_VERSION}/lib/libplumedKernel.so
 ENV PLUMED_VIMPATH=/opt/plumed2-${PLUMED_VERSION}/vim
 ENV PYTHONPATH=/opt/plumed2-${PLUMED_VERSION}/python:$PYTHONPATH
 
