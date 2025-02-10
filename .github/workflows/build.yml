@@ -1,9 +1,7 @@
 name: Build and Push containers
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
 
 jobs:
   base-build:
