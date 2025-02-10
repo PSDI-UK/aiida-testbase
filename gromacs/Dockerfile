@@ -35,6 +35,9 @@ ENV PLUMED_KERNEL=/opt/plumed2-${PLUMED_VERSION}/lib/libplumedKernel.so
 ENV PLUMED_VIMPATH=/opt/plumed2-${PLUMED_VERSION}/vim
 ENV PYTHONPATH=/opt/plumed2-${PLUMED_VERSION}/python:$PYTHONPATH
 
+# Back to tmp
+WORKDIR /tmp
+
 # Grab the specified version of gromacs and untar the source.
 RUN wget ftp://ftp.gromacs.org/gromacs/gromacs-${GMX_VERSION}.tar.gz && \
     tar xvf gromacs-${GMX_VERSION}.tar.gz && \
